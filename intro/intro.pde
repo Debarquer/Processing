@@ -1,5 +1,5 @@
 int origStartX = 10;
-int startY = 0;
+float startY = 0;
 Boolean descending = true;
 
 void setup(){ 
@@ -11,14 +11,10 @@ void draw(){
   
   background(128, 255, 255, 0.5);
   
-  stroke(100);
-  strokeWeight(1.5);
-  
-  
   int width = 120;
   int startX = origStartX;
   
-  //
+  //S
   fill(255, 145, 121);
   rect(startX, startY+20, width, 30);
   rect(startX, startY+20, 30, 150);
@@ -76,15 +72,31 @@ void draw(){
   }
   
   if(descending){
-   startY += 1.0;
+   startY += 0.5;
    if(startY > 100){
       descending = false; 
     }
+    else{
+     float r = random(100);
+     if(r < 2){
+       descending = !descending; 
+      }
+    }
+    
+    return;
   }
   else{
-    startY -= 1.0;
+    startY -= 0.5;
     if(startY <= 0){
       descending = true;
     }
+    else{
+     float r = random(100);
+     if(r < 2){
+       descending = !descending; 
+      }
+    }
+    
+    return;
   }
 }
