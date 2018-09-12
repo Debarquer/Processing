@@ -1,3 +1,4 @@
+//Assignmnet print my name.
 int origStartX = 10;
 float startY = 0;
 Boolean descending = true;
