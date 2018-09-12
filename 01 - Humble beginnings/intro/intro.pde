@@ -3,14 +3,11 @@ int origStartX = 10;
 float startY = 0;
 Boolean descending = true;
 
-int scanLinesYDiff = 0;
-
 class ParabolicCurve{
     void drawParabolicCurves(int PCStartX, int PCStartY, int PCEndX, int PCEndY, int PCDistanceX, int PCDistanceY){
       stroke(128, 128, 128, 128);
       strokeWeight(5);
     
-      //Left to right
       for(int i = 0; i < PCEndX; i++){
         //int yPos = i+scanLinesYDiff - height;
         
@@ -22,16 +19,13 @@ class ParabolicCurve{
         }
         line(PCStartX, PCStartY+(i*PCDistanceY), i*PCDistanceX, PCEndY);
       }
-    
-      scanLinesYDiff++;
-      if(scanLinesYDiff >= height){
-        scanLinesYDiff = 0;
-      }
     }
 }
+ParabolicCurve PC;
 
 void setup(){
   size(768, 432);
+  PC = new ParabolicCurve();
 }
 
 void draw(){
@@ -42,7 +36,7 @@ void draw(){
   int startX = origStartX;
 
   drawName(myWidth, startX);
-  scanLines();
+  DrawParabolicCurves();
 
   origStartX += 2;
   if(origStartX >= 760){
@@ -50,8 +44,7 @@ void draw(){
   }
 }
 
-void scanLines(){
-  ParabolicCurve PC = new ParabolicCurve();
+void DrawParabolicCurves(){
   //PC.drawParabolicCurves(0, 0, width, height, 20, 20);
   PC.drawParabolicCurves(width, height, width, height, 20, -20);
   PC.drawParabolicCurves(0, height, width, 0, 20, -20);
