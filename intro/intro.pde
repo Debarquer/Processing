@@ -5,20 +5,45 @@ Boolean descending = true;
 
 int scanLinesYDiff = 0;
 
-void setup(){ 
+class ParabolicCurve{
+    void drawParabolicCurves(int PCStartX, int PCStartY, int PCEndX, int PCEndY, int PCDistanceX, int PCDistanceY){
+      stroke(128, 128, 128, 128);
+      strokeWeight(5);
+    
+      //Left to right
+      for(int i = 0; i < PCEndX; i++){
+        //int yPos = i+scanLinesYDiff - height;
+        
+        if(i%3==0){
+          stroke(0, 0, 0, 255);
+        } 
+        else{
+          stroke(128, 128, 128, 128);    
+        }
+        line(PCStartX, PCStartY+(i*PCDistanceY), i*PCDistanceX, PCEndY);
+      }
+    
+      scanLinesYDiff++;
+      if(scanLinesYDiff >= height){
+        scanLinesYDiff = 0;
+      }
+    }
+}
+
+void setup(){
   size(768, 432);
 }
 
 void draw(){
   //rect(x, 10, 2, 80);
-  
+
   background(128, 255, 255, 0.5);
   int myWidth = 120;
   int startX = origStartX;
-  
+
   drawName(myWidth, startX);
   scanLines();
-  
+
   origStartX += 2;
   if(origStartX >= 760){
     origStartX = -760;
@@ -26,24 +51,10 @@ void draw(){
 }
 
 void scanLines(){
-  stroke(128, 128, 128, 128);
-  strokeWeight(5);
-  for(int i = 0; i < height*2; i += 10){
-    int yPos = i+scanLinesYDiff - height;
-    
-    /*
-      if(yPos > height){
-        yPos =  yPos - height;
-      }
-    */
-    
-    line(0, yPos, width, yPos);  
-  }
-  
-  scanLinesYDiff++;
-  if(scanLinesYDiff >= height){
-    scanLinesYDiff = 0;
-  }
+  ParabolicCurve PC = new ParabolicCurve();
+  //PC.drawParabolicCurves(0, 0, width, height, 20, 20);
+  PC.drawParabolicCurves(width, height, width, height, 20, -20);
+  PC.drawParabolicCurves(0, height, width, 0, 20, -20);
 }
 
 void drawName(int myWidth, int startX){
@@ -52,20 +63,20 @@ void drawName(int myWidth, int startX){
   float blue = abs((startX + startY)/760 * 255);
   fill(red, green, blue);
   stroke(red, green, blue);
-  
+
   //S
   rect(startX, startY+20, myWidth, 30);
   rect(startX, startY+20, 30, 150);
   rect(startX, startY+150, myWidth, 30);
   rect(startX + 90, startY+150, 30, 150);
   rect(startX, startY+290, myWidth, 30);
-  
+
   startX += myWidth + 30;
   myWidth = 30;
-  
+
   //I
   rect(startX, startY+20, myWidth, 300);
-  
+
   startX += myWidth + 30;
   myWidth = 30;
   //M
@@ -84,16 +95,16 @@ void drawName(int myWidth, int startX){
 
   startX += (myWidth * 4) + 100;
   myWidth = 30;
-  
+
   //O
   rect(startX, startY+20, 150, myWidth);
   rect(startX, startY+290, 150, myWidth);
   rect(startX, startY+20, myWidth, 300);
   rect(startX + 120, startY+20, myWidth, 300);
-  
+
   startX += 180;
   myWidth = 30;
-  
+
   //N
   pushMatrix();
   translate(startX, startY+20);
@@ -103,21 +114,21 @@ void drawName(int myWidth, int startX){
 
   rect(startX, startY+20,myWidth, 300);
   rect(startX + 106, startY+20, myWidth, 300);
-  
-  
-  
+
+
+
   if(descending){
    startY += 0.5;
    if(startY > 100){
-      descending = false; 
+      descending = false;
     }
     else{
      float r = random(100);
      if(r < 2){
-       descending = !descending; 
+       descending = !descending;
       }
     }
-    
+
     return;
   }
   else{
@@ -128,10 +139,10 @@ void drawName(int myWidth, int startX){
     else{
      float r = random(100);
      if(r < 2){
-       descending = !descending; 
+       descending = !descending;
       }
     }
-    
+
     return;
   }
 }
