@@ -3,10 +3,15 @@ int origStartX = 10;
 float startY = 0;
 Boolean descending = true;
 
-float PCDist = 10;
+float PCDistA = 10;
+float PCDistB = 10;
 float PCMod = 1;
 int PCTimeCurr = 0;
 int PCTimeMax = 1;
+
+int frame = 0;
+float[][] lineColors;
+ParabolicCurve PC;
 
 class ParabolicCurve{
   void drawParabolicCurves(int PCStartX, int PCStartY, int numberOfLines, int PCEndY, float PCDistanceX, float PCDistanceY, int PCWidth){
@@ -18,27 +23,36 @@ class ParabolicCurve{
         stroke(0, 0, 0, 255);
       }
       else{
-        stroke(128, 128, 128, 128);
+        //wrong color but more visible
+        stroke(128, frame, 128, 128);
       }
-      line(PCStartX, PCStartY+(i*PCDistanceY), i*PCDistanceX, PCEndY);
+      line(PCStartX, PCStartY+(i*PCDistanceY), (i+1)*PCDistanceX, PCEndY);
     }
   }
 }
-ParabolicCurve PC;
 
 void setup(){
   size(768, 432);
   //size(1920, 1080);
   PC = new ParabolicCurve();
+
+  lineColors = new float[height][];
+  for(int i = 0; i < height; i++){
+    lineColors[i] = new float[3];
+    lineColors[i][0] = random(255);
+    lineColors[i][1] = random(255);
+    lineColors[i][2] = random(255);
+  }
 }
 
 void draw(){
   //rect(x, 10, 2, 80);
 
-  background(128, 255, 255, 0.5);
+  background(128, 255, 255, 255);
   int myWidth = 120;
   int startX = origStartX;
 
+  drawScanLines();
   drawName(myWidth, startX);
   DrawParabolicCurves();
 
@@ -48,20 +62,48 @@ void draw(){
   }
 }
 
+void drawScanLines(){
+  strokeWeight(2);
+
+  for(int i = 0; i < height; i+=1){
+    int yPos = i + frame;
+    if(yPos >= height){
+      // lineColors[i][0] = random(255);
+      // lineColors[i][1] = random(255);
+      // lineColors[i][2] = random(255);
+
+      yPos -= height;
+    }
+
+    float r = lineColors[i][0];
+    float g = lineColors[i][1];
+    float b = lineColors[i][2];
+    stroke(r, g, b);
+
+    line(0, yPos, width, yPos);
+  }
+
+  frame++;
+  if(frame >= height){
+    frame = 0;
+  }
+}
+
 void DrawParabolicCurves(){
   //PC.drawParabolicCurves(0, 0, width, height, 20, 20);
-  PC.drawParabolicCurves(width, height, width, height, PCDist, -PCDist, 2);
-  PC.drawParabolicCurves(0, height, width, 0, PCDist, -PCDist, 2);
+  PC.drawParabolicCurves(width, height, width, height, PCDistA, -PCDistA, 2);
+  PC.drawParabolicCurves(0, height, width, 0, PCDistB, -PCDistB, 2);
 
   PCTimeCurr++;
   if(PCTimeCurr >= PCTimeMax){
     PCTimeCurr = 0;
 
-    PCDist += PCMod*(PCDist/50)/4;
-    if(PCDist > 30){
+    PCDistA += PCMod*(PCDistA/50)/4;
+    PCDistB += PCMod*(PCDistB/50)/4;
+    if(PCDistA > 20){
       PCMod = -1;
     }
-    else if(PCDist <= 4){
+    else if(PCDistA <= 4){
       PCMod = 1;
     }
   }
@@ -71,8 +113,8 @@ void drawName(int myWidth, int startX){
   float red = abs(startX/760 * 255);
   float green = abs(startY/760 * 255);
   float blue = abs((startX + startY)/760 * 255);
-  fill(red, green, blue);
-  stroke(red, green, blue);
+  fill(red, green, blue, 255);
+  stroke(red, green, blue, 255);
 
   //S
   rect(startX, startY+20, myWidth, 30);
@@ -124,7 +166,6 @@ void drawName(int myWidth, int startX){
 
   rect(startX, startY+20,myWidth, 300);
   rect(startX + 106, startY+20, myWidth, 300);
-
 
 
   if(descending){
