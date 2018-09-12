@@ -4,13 +4,11 @@ float startY = 0;
 Boolean descending = true;
 
 class ParabolicCurve{
-    void drawParabolicCurves(int PCStartX, int PCStartY, int PCEndX, int PCEndY, int PCDistanceX, int PCDistanceY){
+    void drawParabolicCurves(int PCStartX, int PCStartY, int numberOfLines, int PCEndY, int PCDistanceX, int PCDistanceY, int PCWidth){
       stroke(128, 128, 128, 128);
-      strokeWeight(5);
+      strokeWeight(PCWidth);
     
-      for(int i = 0; i < PCEndX; i++){
-        //int yPos = i+scanLinesYDiff - height;
-        
+      for(int i = 0; i < numberOfLines; i++){       
         if(i%3==0){
           stroke(0, 0, 0, 255);
         } 
@@ -46,8 +44,8 @@ void draw(){
 
 void DrawParabolicCurves(){
   //PC.drawParabolicCurves(0, 0, width, height, 20, 20);
-  PC.drawParabolicCurves(width, height, width, height, 20, -20);
-  PC.drawParabolicCurves(0, height, width, 0, 20, -20);
+  PC.drawParabolicCurves(width, height, width, height, 10, -10, 2);
+  PC.drawParabolicCurves(0, height, width, 0, 10, -10, 2);
 }
 
 void drawName(int myWidth, int startX){
