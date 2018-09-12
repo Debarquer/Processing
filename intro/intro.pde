@@ -15,8 +15,13 @@ void draw(){
   int width = 120;
   int startX = origStartX;
   
+  float red = abs(startX/760 * 255);
+  float green = abs(startY/760 * 255);
+  float blue = abs((startX + startY)/760 * 255);
+  fill(red, green, blue);
+  stroke(red, green, blue);
+  
   //S
-  fill(255, 145, 121);
   rect(startX, startY+20, width, 30);
   rect(startX, startY+20, 30, 150);
   rect(startX, startY+150, width, 30);
