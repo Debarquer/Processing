@@ -3,6 +3,8 @@ int origStartX = 10;
 float startY = 0;
 Boolean descending = true;
 
+int scanLinesYDiff = 0;
+
 void setup(){ 
   size(768, 432);
 }
@@ -11,10 +13,40 @@ void draw(){
   //rect(x, 10, 2, 80);
   
   background(128, 255, 255, 0.5);
-  
-  int width = 120;
+  int myWidth = 120;
   int startX = origStartX;
   
+  drawName(myWidth, startX);
+  scanLines();
+  
+  origStartX += 2;
+  if(origStartX >= 760){
+    origStartX = -760;
+  }
+}
+
+void scanLines(){
+  stroke(128, 128, 128, 128);
+  strokeWeight(5);
+  for(int i = 0; i < height*2; i += 10){
+    int yPos = i+scanLinesYDiff - height;
+    
+    /*
+      if(yPos > height){
+        yPos =  yPos - height;
+      }
+    */
+    
+    line(0, yPos, width, yPos);  
+  }
+  
+  scanLinesYDiff++;
+  if(scanLinesYDiff >= height){
+    scanLinesYDiff = 0;
+  }
+}
+
+void drawName(int myWidth, int startX){
   float red = abs(startX/760 * 255);
   float green = abs(startY/760 * 255);
   float blue = abs((startX + startY)/760 * 255);
@@ -22,60 +54,57 @@ void draw(){
   stroke(red, green, blue);
   
   //S
-  rect(startX, startY+20, width, 30);
+  rect(startX, startY+20, myWidth, 30);
   rect(startX, startY+20, 30, 150);
-  rect(startX, startY+150, width, 30);
+  rect(startX, startY+150, myWidth, 30);
   rect(startX + 90, startY+150, 30, 150);
-  rect(startX, startY+290, width, 30);
+  rect(startX, startY+290, myWidth, 30);
   
-  startX += width + 30;
-  width = 30;
+  startX += myWidth + 30;
+  myWidth = 30;
   
   //I
-  rect(startX, startY+20, width, 300);
+  rect(startX, startY+20, myWidth, 300);
   
-  startX += width + 30;
-  width = 30;
+  startX += myWidth + 30;
+  myWidth = 30;
   //M
   pushMatrix();
   translate(startX, startY+20);
   rotate(radians(-30));
-  rect(220 - 225, 15, width, 175);
+  rect(220 - 225, 15, myWidth, 175);
   popMatrix();
   pushMatrix();
   translate(startX, startY+20);
   rotate(radians(30));
-  rect(220 -75, -80, width, 175);
+  rect(220 -75, -80, myWidth, 175);
   popMatrix();
-  rect(startX, startY+20, width, 300);
-  rect(startX + (width * 3) + 70, startY+20, width, 300);
+  rect(startX, startY+20, myWidth, 300);
+  rect(startX + (myWidth * 3) + 70, startY+20, myWidth, 300);
 
-  startX += (width * 4) + 100;
-  width = 30;
+  startX += (myWidth * 4) + 100;
+  myWidth = 30;
   
   //O
-  rect(startX, startY+20, 150, width);
-  rect(startX, startY+290, 150, width);
-  rect(startX, startY+20, width, 300);
-  rect(startX + 120, startY+20, width, 300);
+  rect(startX, startY+20, 150, myWidth);
+  rect(startX, startY+290, 150, myWidth);
+  rect(startX, startY+20, myWidth, 300);
+  rect(startX + 120, startY+20, myWidth, 300);
   
   startX += 180;
-  width = 30;
+  myWidth = 30;
   
   //N
   pushMatrix();
   translate(startX, startY+20);
   rotate(radians(-20));
-  rect(-2, 12, width, 306);
+  rect(-2, 12, myWidth, 306);
   popMatrix();
 
-  rect(startX, startY+20, width, 300);
-  rect(startX + 106, startY+20, width, 300);
+  rect(startX, startY+20,myWidth, 300);
+  rect(startX + 106, startY+20, myWidth, 300);
   
-  origStartX += 2;
-  if(origStartX >= 760){
-    origStartX = -760;
-  }
+  
   
   if(descending){
    startY += 0.5;
