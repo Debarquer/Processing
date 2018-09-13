@@ -1,4 +1,5 @@
-int frame = 0;
+int frameCircle = 0;
+int frameParabolic = 0;
 float multiplier = 0.04;
 int numberOfPoints = 320;
 
@@ -7,6 +8,11 @@ Boolean descending = true;
 Float[][] circleDotPos;
 int nrOfDots = 0;
 
+int circleMaxMinTimerMax = 120;
+int circleMaxMInTimerCurr = 0;
+
+int parabolicAnimState = 0;
+
 void setup()
 {
 	size(640, 480);
@@ -14,11 +20,6 @@ void setup()
   frameRate(60);
 
   circleDotPos = new Float[360][];
-}
-
-void draw()
-{
-	background(255);
 
 	for(int i = 0; i < 360; i++){
 		circleDotPos[i] = new Float[5];
@@ -28,22 +29,45 @@ void draw()
 		circleDotPos[i][3] = random(255);
 		circleDotPos[i][4] = random(255);
 	}
+}
 
+void draw()
+{
+	background(255, 255, 255);
+
+	DrawCircle();
   ParabolicCurves();
-  DrawCircle();
 
   //frame++;
   if(descending){
-    frame += 1;//((frame%nrOfDots)/nrOfDots);
-    if(frame >= 250){
-      descending = false;
+    frameCircle += 1;
+		frameParabolic += 1;
+    if(frameCircle >= 250){
+			circleMaxMInTimerCurr++;
+			if(circleMaxMInTimerCurr >= circleMaxMinTimerMax){
+					descending = false;
+					circleMaxMInTimerCurr = 0;
+					parabolicAnimState = (int)random(0, 4);
+			}
+			else{
+				frameCircle -= 1;
+			}
       return;
     }
   }
   else{
-    frame -= 1;//((frame%nrOfDots)/nrOfDots);
-    if(frame <= 0){
-      descending = true;
+		frameCircle -= 1;
+		frameParabolic -= 1;
+    if(frameCircle <= 0){
+			circleMaxMInTimerCurr++;
+			if(circleMaxMInTimerCurr >= circleMaxMinTimerMax){
+					descending = true;
+					circleMaxMInTimerCurr = 0;
+					parabolicAnimState = (int)random(0, 4);
+			}
+			else{
+				frameCircle += 1;
+			}
       return;
     }
   }
@@ -54,8 +78,25 @@ float PCDistB = 10;
 //TODO: Animate these
 void ParabolicCurves(){
 
-	PCDistA = 10 + 1*sin(frame/15)*2;
-	PCDistB = 10  + 1*sin(frame/15)*2;
+	switch(parabolicAnimState){
+		case 0:
+		PCDistA = 10 + 1*sin(frameParabolic/15)*2;
+		PCDistB = 10  + 1*sin(frameParabolic/15)*2;
+		break;
+		case 1:
+		PCDistA = 10 + 1*sin(frameParabolic/15)*2;
+		PCDistB = 10  + 1*cos(frameParabolic/15)*2;
+		break;
+		case 2:
+		PCDistA = 10 + 1*cos(frameParabolic/15)*2;
+		PCDistB = 10  + 1*sin(frameParabolic/15)*2;
+		break;
+		case 3:
+		PCDistA = 10 + 1*cos(frameParabolic/15)*2;
+		PCDistB = 10  + 1*cos(frameParabolic/15)*2;
+		break;
+	}
+
 
   drawParabolicCurves(width, height, width, height, PCDistA, -PCDistB, 2);
   drawParabolicCurves(0, height, width, 0, PCDistA, -PCDistB, 2);
@@ -89,8 +130,8 @@ void DrawCircle(){
     float rads = radians(i);
 
     //frame = 200;
-    float x = (width/2)+cos(rads+frame)*(frame/2);
-    float y = (height/2)+sin(rads+frame)*(frame/2);
+    float x = (width/2)+cos(rads+frameCircle)*(frameCircle/2);
+    float y = (height/2)+sin(rads+frameCircle)*(frameCircle/2);
 
 		//Change every frame?
     //circleDotPos[arrayId] = new Float[5];
@@ -110,7 +151,7 @@ void DrawCircle(){
 
   for(int i = 0; i < (nrOfDots/2); i++){
     strokeWeight(2);
-    stroke(circleDotPos[i][2], circleDotPos[i][2], circleDotPos[i][2]);
+    stroke(circleDotPos[i][2], circleDotPos[i][2], circleDotPos[i][2], 155);
 
     float x1 = circleDotPos[(i + 0)%nrOfDots][0];
     float y1 = circleDotPos[(i + 0)%nrOfDots][1];
