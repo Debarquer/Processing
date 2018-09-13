@@ -1,5 +1,5 @@
 class ParabolicCurve{
-    void drawParabolicCurves(int PCStartX, int PCStartY, int numberOfLines, int PCEndY, int PCDistanceX, int PCDistanceY, int PCWidth){
+    void drawParabolicCurves(LineCoord LC, int numberOfLines, int PCDistanceX, int PCDistanceY, int PCWidth){
       stroke(128, 128, 128, 128);
       strokeWeight(PCWidth);
 
@@ -10,11 +10,21 @@ class ParabolicCurve{
         else{
           stroke(128, 128, 128, 128);
         }
-        line(PCStartX, PCStartY+(i*PCDistanceY), i*PCDistanceX, PCEndY);
+        line(LC.x1, LC.y1+(i*PCDistanceY), i*PCDistanceX, LC.y2);
       }
     }
 }
 ParabolicCurve PC;
+
+class LineCoord{
+  float x1, y1, x2, y2;
+  LineCoord(float x1, float y1, float x2, float y2){
+      this.x1 = x1;
+      this.y1 = y1;
+      this.x2 = x2;
+      this.y2 = y2;
+  }
+}
 
 void setup(){
   size(768, 432);
@@ -24,6 +34,10 @@ void setup(){
 
 void draw(){
   //PC.drawParabolicCurves(0, 0, width, height, 20, 20);
-  PC.drawParabolicCurves(width, height, width, height, 10, -10, 2);
-  PC.drawParabolicCurves(0, height, width, 0, 10, -10, 2);
+
+  LineCoord LC1 = new LineCoord(width, height, 0, height);
+  LineCoord LC2 = new LineCoord(0, height, 0, 0);
+
+  PC.drawParabolicCurves(LC1, width, 10, -10, 2);
+  PC.drawParabolicCurves(LC2, width, 10, -10, 2);
 }

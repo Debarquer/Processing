@@ -1,3 +1,4 @@
+
 int frame = 0;
 float multiplier = 0.04;
 int numberOfPoints = 320;

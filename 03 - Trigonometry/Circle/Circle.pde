@@ -20,13 +20,22 @@ void draw()
 {
 	background(255);
 
+	for(int i = 0; i < 360; i++){
+		circleDotPos[i] = new Float[5];
+		circleDotPos[i][0] = 0.5;
+		circleDotPos[i][1] = 0.5;
+		circleDotPos[i][2] = random(255);
+		circleDotPos[i][3] = random(255);
+		circleDotPos[i][4] = random(255);
+	}
+
   ParabolicCurves();
-  //DrawCircle();
+  DrawCircle();
 
   //frame++;
   if(descending){
     frame += 1;//((frame%nrOfDots)/nrOfDots);
-    if(frame >= width){
+    if(frame >= 250){
       descending = false;
       return;
     }
@@ -40,12 +49,18 @@ void draw()
   }
 }
 
+float PCDistA = 10;
+float PCDistB = 10;
 //TODO: Animate these
 void ParabolicCurves(){
-  drawParabolicCurves(width, height, width, height, 10, -10, 2);
-  drawParabolicCurves(0, height, width, 0, 10, -10, 2);
+
+	PCDistA = 10 + 1*sin(frame/15)*2;
+	PCDistB = 10  + 1*sin(frame/15)*2;
+
+  drawParabolicCurves(width, height, width, height, PCDistA, -PCDistB, 2);
+  drawParabolicCurves(0, height, width, 0, PCDistA, -PCDistB, 2);
 }
-void drawParabolicCurves(int PCStartX, int PCStartY, int numberOfLines, int PCEndY, int PCDistanceX, int PCDistanceY, int PCWidth){
+void drawParabolicCurves(int PCStartX, int PCStartY, int numberOfLines, int PCEndY, float PCDistanceX, float PCDistanceY, int PCWidth){
   stroke(128, 128, 128, 128);
   strokeWeight(PCWidth);
 
@@ -56,7 +71,7 @@ void drawParabolicCurves(int PCStartX, int PCStartY, int numberOfLines, int PCEn
     else{
       stroke(128, 128, 128, 128);
     }
-    line(PCStartX, PCStartY+(i*PCDistanceY), i*PCDistanceX, PCEndY);
+    line(PCStartX, PCStartY+(i*PCDistanceY), (i*PCDistanceX), PCEndY);
   }
 }
 
@@ -77,19 +92,20 @@ void DrawCircle(){
     float x = (width/2)+cos(rads+frame)*(frame/2);
     float y = (height/2)+sin(rads+frame)*(frame/2);
 
-    circleDotPos[arrayId] = new Float[5];
+		//Change every frame?
+    //circleDotPos[arrayId] = new Float[5];
     circleDotPos[arrayId][0] = x;
     circleDotPos[arrayId][1] = y;
-    circleDotPos[arrayId][2] = random(255);
-    circleDotPos[arrayId][3] = random(255);
-    circleDotPos[arrayId][4] = random(255);
+    //circleDotPos[arrayId][2] = random(255);
+    //circleDotPos[arrayId][3] = random(255);
+    //circleDotPos[arrayId][4] = random(255);
     arrayId++;
     nrOfDots++;
 
     //Draws the points
     //strokeWeight(5);
     //stroke(random(255),random(255),random(255));
-    //point(x, y);
+    point(x, y);
   }
 
   for(int i = 0; i < (nrOfDots/2); i++){
