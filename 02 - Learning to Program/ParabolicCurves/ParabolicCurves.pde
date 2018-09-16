@@ -63,10 +63,10 @@ void setup(){
 }
 
 void draw(){
-  //PC.drawParabolicCurves(0, 0, width, height, 20, 20);
-
   LineCoord LC1 = new LineCoord(width, height, width, 0);
   LineCoord LC2 = new LineCoord(width, 0, 0, 0);
+
+  PC.drawParabolicCurves(LC1, LC2, nrOfLines, 2);
 
   int startX = 0;
   int startY = 0;
@@ -77,12 +77,7 @@ void draw(){
   LineCoord LC3 = new LineCoord(startX, startY, midX, endY);
   LineCoord LC4 = new LineCoord(midX, endY, endX, endY);
 
-  //PC.drawParabolicCurves(LC1, width, 10, -10, 2);
-  //PC.drawParabolicCurves(LC2, width, 10, -10, 2);
   PC.drawParabolicCurves(LC3, LC4, nrOfLines, 2);
-
-  //fill(0, 155, 155);
-  PC.drawParabolicCurves(LC1, LC2, nrOfLines, 2);
 
   LineCoord LC5 = new LineCoord(200, 100, 200, 300);
   LineCoord LC6 = new LineCoord(200, 300, 500, 300);
