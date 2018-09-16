@@ -1,18 +1,24 @@
 class ParabolicCurve{
-    void drawParabolicCurves(LineCoord LC, int numberOfLines, int PCDistanceX, int PCDistanceY, int PCWidth){
+    void drawParabolicCurves(LineCoord LCY, LineCoord LCX, int numberOfLines, int PCDistanceX, int PCDistanceY, int PCWidth){
       stroke(128, 128, 128, 128);
       strokeWeight(PCWidth);
 
-      for(int i = 0; i < numberOfLines; i++){
-        if(i%3==0){
-          stroke(0, 0, 0, 255);
-        }
-        else{
-          stroke(128, 128, 128, 128);
-        }
-        line(LC.x1, LC.y1+(i*PCDistanceY), i*PCDistanceX, LC.y2);
-      }
+    for(int i = 0; i < numberOfLines; i++){
+      float x1 = LCY.x1;
+      float y1 = LCY.y1 + (i * abs(LCY.y2 - LCY.y1)/numberOfLines * PCDistanceY);
+      float x2 = LCX.x1 + (i * abs(LCX.x2 - LCX.x1)/numberOfLines * PCDistanceX);
+      float y2 = LCX.y1;
+
+      if(i%3==0){
+            stroke(0, 0, 0, 255);
+          }
+          else{
+            stroke(128, 128, 128, 128);
+          }
+
+      line(x1, y1, x2, y2);
     }
+  }
 }
 ParabolicCurve PC;
 
@@ -35,9 +41,26 @@ void setup(){
 void draw(){
   //PC.drawParabolicCurves(0, 0, width, height, 20, 20);
 
-  LineCoord LC1 = new LineCoord(width, height, 0, height);
-  LineCoord LC2 = new LineCoord(0, height, 0, 0);
+  LineCoord LC1 = new LineCoord(width, height, width, 0);
+  LineCoord LC2 = new LineCoord(width, 0, 0, 0);
 
-  PC.drawParabolicCurves(LC1, width, 10, -10, 2);
-  PC.drawParabolicCurves(LC2, width, 10, -10, 2);
+  int startX = 0;
+  int startY = 0;
+  int midX = 0;
+  int endX = width;
+  int endY = height;
+  int nrOfLines = 20;
+  LineCoord LC3 = new LineCoord(startX, startY, midX, endY);
+  LineCoord LC4 = new LineCoord(midX, endY, endX, endY);
+
+  //PC.drawParabolicCurves(LC1, width, 10, -10, 2);
+  //PC.drawParabolicCurves(LC2, width, 10, -10, 2);
+  PC.drawParabolicCurves(LC3, LC4, nrOfLines, 1, 1, 2);
+
+  //fill(0, 155, 155);
+  PC.drawParabolicCurves(LC1, LC2, nrOfLines, -1, -1, 2);
+
+  LineCoord LC5 = new LineCoord(200, 100, 200, 300);
+  LineCoord LC6 = new LineCoord(200, 300, 500, 300);
+  PC.drawParabolicCurves(LC5, LC6, 10, 1, 1, 2);
 }
