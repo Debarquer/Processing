@@ -1,12 +1,36 @@
 class ParabolicCurve{
-    void drawParabolicCurves(LineCoord LCY, LineCoord LCX, int numberOfLines, int PCDistanceX, int PCDistanceY, int PCWidth){
+    void drawParabolicCurves(LineCoord LCY, LineCoord LCX, int numberOfLines, int PCWidth){
       stroke(128, 128, 128, 128);
       strokeWeight(PCWidth);
 
+    //calculates the direction of the curves in the y and x axis
+    int modY = 0;
+    if(LCY.y2 > LCY.y1){
+      modY = 1;
+    }
+    else if(LCY.y2 < LCY.y1){
+      modY = -1;
+    }
+    else{
+      print("Error: y2 == y1?");
+    }
+
+    int modX = 0;
+    if(LCX.x2 > LCX.x1){
+      modX = 1;
+    }
+    else if(LCX.x2 < LCX.x1){
+      modX = -1;
+    }
+    else{
+      print("Error: x2 == x1?");
+    }
+
+
     for(int i = 0; i < numberOfLines; i++){
       float x1 = LCY.x1;
-      float y1 = LCY.y1 + (i * abs(LCY.y2 - LCY.y1)/numberOfLines * PCDistanceY);
-      float x2 = LCX.x1 + (i * abs(LCX.x2 - LCX.x1)/numberOfLines * PCDistanceX);
+      float y1 = LCY.y1 + (i * abs(LCY.y2 - LCY.y1)/numberOfLines * modY);
+      float x2 = LCX.x1 + (i * abs(LCX.x2 - LCX.x1)/numberOfLines * modX);
       float y2 = LCX.y1;
 
       if(i%3==0){
@@ -55,12 +79,12 @@ void draw(){
 
   //PC.drawParabolicCurves(LC1, width, 10, -10, 2);
   //PC.drawParabolicCurves(LC2, width, 10, -10, 2);
-  PC.drawParabolicCurves(LC3, LC4, nrOfLines, 1, 1, 2);
+  PC.drawParabolicCurves(LC3, LC4, nrOfLines, 2);
 
   //fill(0, 155, 155);
-  PC.drawParabolicCurves(LC1, LC2, nrOfLines, -1, -1, 2);
+  PC.drawParabolicCurves(LC1, LC2, nrOfLines, 2);
 
   LineCoord LC5 = new LineCoord(200, 100, 200, 300);
   LineCoord LC6 = new LineCoord(200, 300, 500, 300);
-  PC.drawParabolicCurves(LC5, LC6, 10, 1, 1, 2);
+  PC.drawParabolicCurves(LC5, LC6, 10, 2);
 }
