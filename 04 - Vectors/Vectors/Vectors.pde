@@ -23,7 +23,7 @@ void setup(){
   ellipseBPosition = new PVector(width - 25, height - 25);
   ellipseBMovement = new PVector(random(0, 100)/100, random(1, 100)/100).normalize();
   //print("EllipseBMovement: " + ellipseBMovement + "\n");
-  
+
   PFont f;
   f = createFont("Arial", 16, true);
   textFont(f, 36);
@@ -34,13 +34,13 @@ void draw(){
   background(255, 255, 255);
   String s = "Score: " + score;
   text(s, 50, 50);
-  
+
   timerCurr++;
   if(timerCurr >= timerMax){
     timerCurr = 0;
     score++;
   }
-  
+
   fill(155, 155, 255);
 
   moveEllipseA();
@@ -81,19 +81,19 @@ void moveEllipseB(){
   else if(ellipseBPosition.x <= 0){
     ellipseBMovement.x = -ellipseBMovement.x;
   }
-  
+
   if(ellipseBPosition.y >= height){
     ellipseBMovement.y = -ellipseBMovement.y;
   }
   else if(ellipseBPosition.y <= 0){
     ellipseBMovement.y = -ellipseBMovement.y;
   }
-  
+
   PVector movement = ellipseBMovement;
   //print("Movement: " + movement + "\n");
-  
+
   PVector movementNormalized = movement;
-  
+
   movementNormalized.normalize();
   movementNormalized.mult(movementSpeed);
 
