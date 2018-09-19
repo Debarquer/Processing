@@ -1,3 +1,50 @@
+class QuickSort
+{
+    int partition(int arr[], int low, int high)
+    {
+        int pivot = arr[high];
+        int i = (low-1); // index of smaller element
+        for (int j=low; j<high; j++)
+        {
+            if (arr[j] >= pivot)
+            {
+                i++;
+
+                int temp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = temp;
+            }
+        }
+
+        int temp = arr[i+1];
+        arr[i+1] = arr[high];
+        arr[high] = temp;
+
+        return i+1;
+    }
+
+    void sort(int arr[], int low, int high)
+    {
+        if (low < high)
+        {
+            int pi = partition(arr, low, high);
+
+            sort(arr, low, pi-1);
+            sort(arr, pi+1, high);
+        }
+    }
+
+    /* A utility function to print array of size n */
+    public void printArray(int arr[])
+    {
+        int n = arr.length;
+        for (int i=0; i<n; ++i)
+            System.out.print(arr[i]+" ");
+        System.out.println();
+    }
+}
+QuickSort QS;
+
 PVector ellipseAPosition;
 int ellipseAWidth = 20;
 int ellipseAHeight = 20;
@@ -20,6 +67,8 @@ Boolean gameOver = false;
 
 void setup(){
   size(768, 432);
+
+  QS = new QuickSort();
 
   ellipseAPosition = new PVector(width, height);
   ellipseBPosition = new PVector(width - 25, height - 25);
@@ -80,7 +129,6 @@ void moveEllipseA(){
   float diffXA = abs(ellipseAPosition.x - mouseX);
   float diffYA = abs(ellipseAPosition.y - mouseY);
   if(diffXA < loseThreshold + ellipseAWidth && diffYA < loseThreshold + ellipseAHeight){
-    print("You lose! Final score: " + score);
     exitGame();
   }
 }
@@ -116,28 +164,46 @@ void moveEllipseB(){
   float diffXB = abs(ellipseBPosition.x - mouseX);
   float diffYB = abs(ellipseBPosition.y - mouseY);
   if(diffXB < loseThreshold + ellipseBWidth && diffYB < loseThreshold + ellipseBHeight){
-    print("You lose! Final score: " + score + "\n");
-
     exitGame();
   }
 }
 
+float GameOverYBuffer = 30;
+float yMod = 0;
+float scrollspeed = 3;
 void GameOverScreen(){
    background(255, 255, 255);
 
    PFont f;
    f = createFont("Arial", 16, true);
-   textFont(f, 18);
-   fill(0, 0, 0);
+   textFont(f, 96);
+   fill(255, 0, 0);
 
-  String s = "GAME OVER!\n";
+  String s = "GAME       OVER!\n";
+  text(s, width/2 - 380, height/2);
+
+  f = createFont("Arial", 16, true);
+  textFont(f, 24);
+  fill(0, 0, 0);
 
   String[] highscores = loadStrings("highscore.txt");
-  for(int i = 0; i < highscores.length; i++){
-    s += "Score: " + highscores[i] + "\n";
+
+  int[] highscoresI = new int[highscores.length];
+  for(int i = 0; i < highscoresI.length; i++){
+    highscoresI[i] = Integer.parseInt(highscores[i]);
   }
 
-  text(s, 0, 0);
+  QS.sort(highscoresI, 0, highscores.length - 1);
+
+  for(int i = 0; i < highscores.length; i++){
+    s = "Score: " + highscoresI[i] + "\n";
+
+    text(s, width/2 - 50, height + GameOverYBuffer + GameOverYBuffer*i + yMod);
+  }
+  yMod-=scrollspeed;
+  if(yMod < -highscores.length * GameOverYBuffer - height){
+    yMod = 0;
+  }
 }
 
 void exitGame(){
@@ -162,6 +228,7 @@ void exitGame(){
     //exit();
     gameOver = true;
     score = 0;
+    movementSpeed = 5;
   }
 }
 
