@@ -105,7 +105,21 @@ void moveEllipseB(){
   float diffXB = abs(ellipseBPosition.x - mouseX);
   float diffYB = abs(ellipseBPosition.y - mouseY);
   if(diffXB < loseThreshold + ellipseBWidth && diffYB < loseThreshold + ellipseBHeight){
-    print("You lose! Final score: " + score);
+    print("You lose! Final score: " + score + "\n");
+    String[] highscores = loadStrings("highscore.txt");
+    String[] tmp = new String[highscores.length + 1];
+    for(int i = 0; i < highscores.length; i++){
+      //print(highscores[i] + "\n");
+      //tmp[i] = highscores[i];
+
+      tmp[i] = "This is text";
+    }
+    tmp[tmp.length - 1] = ""+score;
+    saveStrings("highscore.txt", tmp);
+
+    //String[] clear = new String[0];
+    //saveStrings("highscore.txt", clear);
+
     if(endGameOnDefeat)
       exit();
   }
