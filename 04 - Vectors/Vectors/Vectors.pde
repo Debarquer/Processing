@@ -207,25 +207,22 @@ void GameOverScreen(){
 }
 
 void exitGame(){
-  String[] highscores = loadStrings("highscore.txt");
-  String[] tmp = new String[highscores.length + 1];
-  for(int i = 0; i < highscores.length; i++){
-    //print(highscores[i] + "\n");
-    //tmp[i] = highscores[i];
-
-    tmp[i] = highscores[i];
+  if(score <= 0){
+    print("Score <= 0, no highscore recorded\n");
   }
-  tmp[tmp.length - 1] = ""+score;
+  else{
+    String[] highscores = loadStrings("highscore.txt");
+    String[] tmp = new String[highscores.length + 1];
+    for(int i = 0; i < highscores.length; i++){
 
-  //String[] s = new String[]{"Goodbye cruel world! \n This is very nice!"};
-  //saveStrings(dataPath("highscore.txt"), s);
+      tmp[i] = highscores[i];
+    }
+    tmp[tmp.length - 1] = ""+score;
 
-  //String[] s = new String[]{"This is another thing"};
-  saveStrings(dataPath("highscore.txt"), tmp);
+    saveStrings(dataPath("highscore.txt"), tmp);
+  }
 
   if(endGameOnDefeat){
-    //delay(3000);
-    //exit();
     gameOver = true;
     score = 0;
     movementSpeed = 5;
