@@ -16,6 +16,8 @@ float timerCurr = 60;
 
 Boolean endGameOnDefeat = true;
 
+Boolean gameOver = false;
+
 void setup(){
   size(768, 432);
 
@@ -24,29 +26,39 @@ void setup(){
   ellipseBMovement = new PVector(random(0, 100)/100, random(1, 100)/100).normalize();
   //print("EllipseBMovement: " + ellipseBMovement + "\n");
 
-  PFont f;
-  f = createFont("Arial", 16, true);
-  textFont(f, 36);
-  fill(0, 0, 0);
+  //String[] s = new String[]{"Hello World! \n This is very nice!"};
+  //saveStrings("highscore.txt", s);
 }
 
 void draw(){
-  background(255, 255, 255);
-  String s = "Score: " + score;
-  text(s, 50, 50);
+  if(!gameOver){
+    background(255, 255, 255);
 
-  timerCurr++;
-  if(timerCurr >= timerMax){
-    timerCurr = 0;
-    score++;
+    PFont f;
+    f = createFont("Arial", 16, true);
+    textFont(f, 36);
+    fill(0, 0, 0);
+
+    String s = "Score: " + score;
+    text(s, 50, 50);
+
+    timerCurr++;
+    if(timerCurr >= timerMax){
+      timerCurr = 0;
+      score++;
+    }
+
+    fill(155, 155, 255);
+
+    moveEllipseA();
+    moveEllipseB();
+
+    movementSpeed += 0.01;
+  }
+  else{
+    GameOverScreen();
   }
 
-  fill(155, 155, 255);
-
-  moveEllipseA();
-  moveEllipseB();
-
-  movementSpeed += 0.01;
 }
 
 void moveEllipseA(){
@@ -69,8 +81,7 @@ void moveEllipseA(){
   float diffYA = abs(ellipseAPosition.y - mouseY);
   if(diffXA < loseThreshold + ellipseAWidth && diffYA < loseThreshold + ellipseAHeight){
     print("You lose! Final score: " + score);
-    if(endGameOnDefeat)
-      exit();
+    exitGame();
   }
 }
 
@@ -106,21 +117,56 @@ void moveEllipseB(){
   float diffYB = abs(ellipseBPosition.y - mouseY);
   if(diffXB < loseThreshold + ellipseBWidth && diffYB < loseThreshold + ellipseBHeight){
     print("You lose! Final score: " + score + "\n");
-    String[] highscores = loadStrings("highscore.txt");
-    String[] tmp = new String[highscores.length + 1];
-    for(int i = 0; i < highscores.length; i++){
-      //print(highscores[i] + "\n");
-      //tmp[i] = highscores[i];
 
-      tmp[i] = "This is text";
-    }
-    tmp[tmp.length - 1] = ""+score;
-    saveStrings("highscore.txt", tmp);
+    exitGame();
+  }
+}
 
-    //String[] clear = new String[0];
-    //saveStrings("highscore.txt", clear);
+void GameOverScreen(){
+   background(255, 255, 255);
 
-    if(endGameOnDefeat)
-      exit();
+   PFont f;
+   f = createFont("Arial", 16, true);
+   textFont(f, 18);
+   fill(0, 0, 0);
+
+  String s = "GAME OVER!\n";
+
+  String[] highscores = loadStrings("highscore.txt");
+  for(int i = 0; i < highscores.length; i++){
+    s += "Score: " + highscores[i] + "\n";
+  }
+
+  text(s, 0, 0);
+}
+
+void exitGame(){
+  String[] highscores = loadStrings("highscore.txt");
+  String[] tmp = new String[highscores.length + 1];
+  for(int i = 0; i < highscores.length; i++){
+    //print(highscores[i] + "\n");
+    //tmp[i] = highscores[i];
+
+    tmp[i] = highscores[i];
+  }
+  tmp[tmp.length - 1] = ""+score;
+
+  //String[] s = new String[]{"Goodbye cruel world! \n This is very nice!"};
+  //saveStrings(dataPath("highscore.txt"), s);
+
+  //String[] s = new String[]{"This is another thing"};
+  saveStrings(dataPath("highscore.txt"), tmp);
+
+  if(endGameOnDefeat){
+    //delay(3000);
+    //exit();
+    gameOver = true;
+    score = 0;
+  }
+}
+
+void mousePressed(){
+  if(gameOver){
+    gameOver = false;
   }
 }

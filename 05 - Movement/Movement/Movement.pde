@@ -28,8 +28,8 @@ void setup(){
   balls = new Ball[nrOfBalls];
   for(int i = 0; i < nrOfBalls; i++){
     float[] c = new float[]{random(255), random(255), random(255)};
-    //                  float myPos.y.x,  float myPos.y,     float myWidth, float myHeight, float v.x,           float v.y,    float aX, float aY, float[] myColor
-    balls[i] = new Ball(20 + 20 * i, random(height), 10,            10,             0,        0, 0,        0,        c);
+    //float myPos.y.x, float myPos.y, float myWidth, float myHeight, float v.x, float v.y, float aX, float aY, float[] myColor
+    balls[i] = new Ball(20 + 20 * i, random(height), 10, 10, 0, 0, 0, 0, c);
   }
 }
 
