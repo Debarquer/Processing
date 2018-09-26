@@ -4,16 +4,22 @@ class Zombie extends Human{
     super();
 
     col = new PVector(0, 255, 0);
+    speed.x /= 2;
+    speed.y /= 2;
 
     isZombie = true;
   }
 
   public Zombie(PVector pos, PVector size, PVector speed, PVector target){
     super(pos, size, speed, target);
+    speed.x /= 2;
+    speed.y /= 2;
 
     col = new PVector(0, 255, 0);
 
     isZombie = true;
+    
+    
   }
 
   public void draw(){

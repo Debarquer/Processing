@@ -1,4 +1,6 @@
 class CharacterManager{
+  //public GameManager gameManager;
+
   Human[] characters;
   int nrOfCharacters;
   int nrOfZombies;
@@ -10,9 +12,11 @@ class CharacterManager{
     characters = new Human[nrOfCharacters];
     for(int i = 0; i < nrOfCharacters - nrOfZombies; i++){
       characters[i] = new Human();
+      characters[i].characterManager = this;
     }
     for(int i = nrOfCharacters - nrOfZombies; i < nrOfCharacters; i++){
       characters[i] = new Zombie();
+      characters[i].characterManager = this;
     }
   }
 
@@ -32,6 +36,7 @@ class CharacterManager{
 
             Human tmp = characters[j];
             characters[j] = new Zombie(tmp.pos, tmp.size, tmp.speed, tmp.target);
+            characters[j].characterManager = this;
 
             nrOfZombies++;
             if(nrOfZombies >= nrOfCharacters){
@@ -48,6 +53,7 @@ class CharacterManager{
 
             Human tmp = characters[i];
             characters[i] = new Zombie(tmp.pos, tmp.size, tmp.speed, tmp.target);
+            characters[i].characterManager = this;
 
             nrOfZombies++;
             if(nrOfZombies >= nrOfCharacters){
@@ -79,18 +85,44 @@ class CharacterManager{
   }
 
   public PVector findClosestHuman(PVector pos){
-    PVector closestHuman = new PVector(0, 0);
-    float shortestDist = 0;
-    for(int i = 0; i < characters.length; i++){
-      float dist = dist(pos.x, pos.y, characters[i].pos.x, characters[i].pos.y);
-      if(dist < shortestDist){
-        closestHuman.x = characters[i].pos.x;
-        closestHuman.y = characters[i].pos.y;
 
-        shortestDist = dist;
+    Human closestHuman = null;// = new Human();
+    float shortestDist = -1;
+
+    for(int i = 0; i < characters.length; i++){
+      if(characters[i].isZombie){
+        continue;
+      }
+
+      float distance = dist(pos.x, pos.y, characters[i].pos.x, characters[i].pos.y);
+      //print(distance + ":" + shortestDist + "\n");
+      if(distance < shortestDist || shortestDist < 0){
+        closestHuman = characters[i]; //<>//
+
+        shortestDist = distance;
       }
     }
 
-    return closestHuman;
+    //Failed to find a human
+    if(closestHuman == null){
+       print("Failed to find human\n");
+       return new PVector(0, 0); 
+       //return new PVector(random(width), random(height)); 
+    }
+    else if(closestHuman.pos == null){
+      print("Found human, but pos is null\n");
+      return new PVector(0, 0); 
+    }
+      
+    if(closestHuman.pos.x == 0 && closestHuman.pos.y == 0){
+      print("Closest human is at [0,0]?\n");
+      return new PVector(0, 0);
+    }
+    if(shortestDist <= 0){
+      print("Shortest distance <= 0?}\n");
+      return new PVector(pos.x, pos.y);
+    }
+    
+    return closestHuman.pos;
   }
 }

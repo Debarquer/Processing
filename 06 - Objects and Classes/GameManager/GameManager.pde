@@ -7,7 +7,7 @@ void setup(){
 
   size(900, 900);
 
-  cm = new CharacterManager(10, 0);
+  cm = new CharacterManager(40, 1);
 }
 
 void draw(){

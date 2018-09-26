@@ -1,5 +1,7 @@
 class Human{
-  PVector pos, size, speed, target;
+  public CharacterManager characterManager;
+
+  public PVector pos, size, speed, target;
 
   float humanCol;
   PVector col;
@@ -8,7 +10,9 @@ class Human{
   boolean isZombie = false;
 
   float angle;
-  float timer;
+  float timerCurr;
+  float timerMax;
+  float timerRangeMax = 5*60;
 
   public Human(){
     pos = new PVector(random(width), random(height));
@@ -21,7 +25,8 @@ class Human{
     col = new PVector(humanCol, humanCol, humanCol);
 
     angle = 0;
-    timer = random(10);
+    timerCurr = 0;
+    timerMax = random(timerRangeMax);
   }
 
   public Human(PVector pos, PVector size, PVector speed, PVector target){
@@ -32,53 +37,94 @@ class Human{
 
     humanCol = random(255);
     col = new PVector(humanCol, humanCol, humanCol);
+    
+    angle = 0;
+    timerCurr = 0;
+    timerMax = random(timerRangeMax);
   }
 
   public void update(){
+    PVector direction = new PVector(0, 0);
+
+    if(isZombie){  
     PVector targetMath = new PVector();
     targetMath.x = target.x;
     targetMath.y = target.y;
 
-    PVector direction = targetMath.sub(pos);
+    direction = targetMath.sub(pos);
     direction.normalize();
 
     //print("Human:"+target+":"+pos+":"+direction+"\n");
-
-    pos.x += direction.x;
-    pos.y += direction.y;
-
-    if(abs(pos.x - target.x) < 1 && abs(pos.y - target.y) < 1){
-      if(!isZombie){
-        angle = random(-90 + angle, 90 + angle);
-
-        float lengthWidth = random(width);
-        float lengthHeight = random(height);
-
-        //float myAngle = atan2(pos.y, pos.x);
-        //angle += an;
-
-        target.x = cos(radians(angle)) * lengthWidth;
-        target.y = sin(radians(angle)) * lengthHeight;
-
-        if(target.x < 0){
-          target.x = 0;
-        }
-        if(target.x > width){
-          target.x = width;
-        }
-        if(target.y < 0){
-          target.y = 0;
-        }
-        if(target.y > height){
-          target.y = height;
-        }
-      }
-      else{
-        //a zombie
-        target = findClosestHuman(pos);
-      }
+    }
+    else{
+      direction.x = cos(angle);
+      direction.y = sin(angle);
+    }
+    
+    //abs(pos.x - target.x) < 1 && abs(pos.y - target.y) < 1
+    if(pos.x > width){
+      pos.x = width - 1;
+      
+      float aX = cos(angle);
+      float aY = sin(angle);
+      aX *= -1;
+      angle = atan2(aY, aX);
+    }
+    else if(pos.x < size.x){
+      pos.x = size.x + 1;
+      
+      float aX = cos(angle);
+      float aY = sin(angle);
+      aX *= -1;
+      angle = atan2(aY, aX);
+    }
+    if(pos.y > height){
+      pos.y = height - 1;
+      
+      float aX = cos(angle);
+      float aY = sin(angle);
+      aY *= -1;
+      angle = atan2(aY, aX);
+    }
+    else if(pos.y < size.y){
+      pos.y = size.y + 1;
+      
+      float aX = cos(angle);
+      float aY = sin(angle);
+      aY *= -1;
+      angle = atan2(aY, aX);
     }
 
+    pos.x += speed.x * direction.x;
+    pos.y += speed.y * direction.y;
+
+    if(isZombie){
+      //a zombie
+      if(characterManager == null){
+        print("characterManager is null!\n");
+        return;
+      }
+      
+      PVector tmp = characterManager.findClosestHuman(pos);
+      if(tmp == null){
+        target = new PVector(0, 0);
+        print("FindClosestHuman return null!\n");
+      }
+      else{
+        target.x = tmp.x;
+        target.y = tmp.y;
+      }
+
+      return;
+    }
+      
+    timerCurr++;
+    if(timerCurr >= timerMax){
+      angle += radians(random(-90, 90));
+      timerCurr = 0;
+      timerMax = random(timerRangeMax);
+      //target = new PVector(random(width), random(height));
+    }
   }
 
   public void draw(){
