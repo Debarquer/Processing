@@ -1,8 +1,8 @@
 private float _dt, _lt;
 public ArrayList<Shape> shapes;
 
-public Circle circ1, circ2;
-public Box box1, box2;
+public Circle circ1, circ2, circ3, circ4;
+public Box box1, box2, box3, box4;
 public Line line1, line2;
 public MultiBox player;
 
@@ -13,11 +13,15 @@ public void setup(){
 
   shapes = new ArrayList<Shape>();
 
-  circ1 = new Circle(300, 200, 50);
-  circ2 = new Circle(325, 225, 50);
+  circ1 = new Circle(300, height - 50, 50);
+  circ2 = new Circle(150, height - 50, 50);
+  circ3 = new Circle(50, height - 50, 50);
+  circ4 = new Circle(350, height - 50, 50);
 
-  box1 = new Box(200, 200, 60, 40);
-  box2 = new Box(430, 220, 60, 40);
+  box1 = new Box(100, height - 100, 60, 40);
+  box2 = new Box(200, height - 200, 60, 40);
+  box3 = new Box(300, height - 300, 60, 40);
+  box4 = new Box(400, height - 400, 60, 40);
 
   line1 = new Line(10, 10, width - 10, height - 10);
   line2 = new Line(width - 10, 10, 10, height - 10);
@@ -28,9 +32,13 @@ public void setup(){
 
   shapes.add(circ1);
   shapes.add(circ2);
+  shapes.add(circ3);
+  shapes.add(circ4);
 
   shapes.add(box1);
   shapes.add(box2);
+  shapes.add(box3);
+  shapes.add(box4);
 
   shapes.add(line1);
   shapes.add(line2);
@@ -48,6 +56,9 @@ public void draw(){
   line1.dest.y = mouseY;
 
   for(int i = 0; i < shapes.size(); i++){
+    if(!shapes.get(i).enabled)
+      continue;
+
     if(shapes.get(i) instanceof MultiBox){
       fill(0, 255, 0);
     }
@@ -65,6 +76,13 @@ public void draw(){
             //shapes.get(i).pos.x = shapes.get(j).pos.x;
             shapes.get(i).pos.y = shapes.get(j).pos.y - ((MultiBox)shapes.get(i)).center.size.y/2 - ((Box)shapes.get(j)).size.y/2;
             ((MultiBox)shapes.get(i)).v.y = 0;
+          }
+        }
+        else if(shapes.get(j) instanceof Circle){
+          if(((Circle)shapes.get(j)).intersectsMultiBox(((MultiBox)shapes.get(i)))){
+            //shapes.get(i).pos.x = shapes.get(j).pos.x;
+            //shapes.get(i).pos.y = shapes.get(j).pos.y - ((MultiBox)shapes.get(i)).center.size.y/2 - ((Box)shapes.get(j)).size.y/2;
+            //((MultiBox)shapes.get(i)).v.y = 0;
           }
         }
       }
