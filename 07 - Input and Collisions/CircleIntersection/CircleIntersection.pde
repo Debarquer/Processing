@@ -16,13 +16,13 @@ public void setup(){
   circ1 = new Circle(300, 200, 50);
   circ2 = new Circle(325, 225, 50);
 
-  box1 = new Box(400, 200, 60, 40);
+  box1 = new Box(200, 200, 60, 40);
   box2 = new Box(430, 220, 60, 40);
 
   line1 = new Line(10, 10, width - 10, height - 10);
   line2 = new Line(width - 10, 10, 10, height - 10);
 
-  player = new MultiBox(400, 141, 40, 80);
+  player = new MultiBox(-400, -400, 40, 80);
 
   lineIntersectPoint = new PVector(0, 0);
 
@@ -48,7 +48,27 @@ public void draw(){
   line1.dest.y = mouseY;
 
   for(int i = 0; i < shapes.size(); i++){
+    if(shapes.get(i) instanceof MultiBox){
+      fill(0, 255, 0);
+    }
+    else{
+      fill(255, 255, 255);
+    }
     shapes.get(i).update(_dt);
+  }
+
+  for(int i = 0; i < shapes.size(); i++){
+    if(shapes.get(i) instanceof MultiBox){
+      for(int j = 0; j < shapes.size(); j++){
+        if(shapes.get(j) instanceof Box){
+          if(((Box)shapes.get(j)).intersectsMultiBox(((MultiBox)shapes.get(i)))){
+            //shapes.get(i).pos.x = shapes.get(j).pos.x;
+            shapes.get(i).pos.y = shapes.get(j).pos.y - ((MultiBox)shapes.get(i)).center.size.y/2 - ((Box)shapes.get(j)).size.y/2;
+            ((MultiBox)shapes.get(i)).v.y = 0;
+          }
+        }
+      }
+    }
   }
 
   //println(circ1.intersectsCircle(circ2));
@@ -76,4 +96,9 @@ public void draw(){
 public void tickDeltaTime(){
   _dt = (millis() - _lt) * 0.001;
   _lt = millis();
+}
+
+public void mousePressed(){
+  player.pos.x = mouseX;
+  player.pos.y = mouseY;
 }
