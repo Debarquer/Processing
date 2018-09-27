@@ -69,7 +69,7 @@ public class MultiBox extends Shape{
     if(v.y == 0){
       if(jump){
         //print("Jumping! " + v.y + "\n");
-        v.y = -10;
+        v.y = -40;
       }
     }
 

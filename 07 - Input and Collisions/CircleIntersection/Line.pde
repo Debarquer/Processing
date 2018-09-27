@@ -53,7 +53,6 @@ public class Line extends Shape{
     }
 
     //If at this point, do intersect
-
     float denom = (a1 * b2) - (a2 * b1);
     float offset;
 

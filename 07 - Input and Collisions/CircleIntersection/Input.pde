@@ -14,7 +14,7 @@ void keyPressed(){
       moveLeft = true;
     }
     else if(keyCode == UP){
-      moveUp = true;
+      jump = true;
     }
     else if(keyCode == DOWN){
       moveDown = true;
@@ -48,7 +48,7 @@ void keyReleased(){
       moveLeft = false;
     }
     else if(keyCode == UP){
-      moveUp = false;
+      jump = false;
     }
     else if(keyCode == DOWN){
       moveDown = false;
