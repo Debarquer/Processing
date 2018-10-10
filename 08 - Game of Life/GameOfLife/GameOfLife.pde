@@ -1,15 +1,31 @@
+import processing.sound.*;
+
 GameObject cells[][];
 
 int cellSize;
 int nrOfColumns;
 int nrOfRows;
 int fillPercentage = 15;
+int speed = 5;
+int speedIncreaseIncrement = 5;
+
+int nrOfGenerations = 0;
 
 String stable = "Unstable";
 
+ArrayList<Firework> WMAs;
+
+Sound s;
+
+boolean pauseSimulation = true;
+
 void setup(){
-  size(600, 600);
-  frameRate(4);
+  size(1800, 600);
+  frameRate(speed);
+
+  s = new Sound(this);
+
+  WMAs = new ArrayList<Firework>();
 
   cellSize = 20;
   nrOfColumns = (int)Math.floor(width/cellSize);
@@ -23,12 +39,12 @@ void setup(){
   for(int x = 0; x < nrOfColumns; x++){
     for(int y = 0; y < nrOfRows; y++){
       cells[x][y] = new GameObject(x*cellSize, y*cellSize, cellSize);
-      // if(random(0, 100) < fillPercentage){
+      if(random(0, 100) < fillPercentage){
+        cells[x][y]._resurrecting = true;
+      }
+      // if( (x == 15 && y == 15) || (x == 16 && y == 15) || (x == 15 && y == 16) || (x == 16 && y == 16)){
       //   cells[x][y]._isAlive = true;
       // }
-      if( (x == 15 && y == 15) || (x == 16 && y == 15) || (x == 15 && y == 16) || (x == 16 && y == 16)){
-        cells[x][y]._isAlive = true;
-      }
     }
   }
 
@@ -107,20 +123,68 @@ void setup(){
 
 void draw(){
   background(0, 255, 0);
+  float a = 0.0;
+  float b = 0.15;
+  float c = 0.001f;
+  s.volume(a+b+c);
 
-  drawGrid();
+  //drawGrid();
+  stable = "Status: Unstable after " + nrOfGenerations + " generations Speed: " + (int)speed/5 + "x";
 
-  boolean isStable = true;
-  // Check cell status, set _dying or _resurrecting
-  for(int x = 0; x < nrOfColumns; x++){
-    for(int y = 0; y < nrOfRows; y++){
-        isStable = cells[x][y].update();
+  if(!pauseSimulation){
+    boolean isStable = true;
+    // Check cell status, set _dying or _resurrecting
+    for(int x = 0; x < nrOfColumns; x++){
+      for(int y = 0; y < nrOfRows; y++){
+        if(!cells[x][y].update()){
+          isStable = false;
+        }
+      }
+    }
+
+    if(isStable){
+      // TODO: Implement fireworks
+      //print("Stable!\n");
+      stable = "Status: Stable after " + nrOfGenerations + " generations Speed: " + (int)speed/5 + "x";
+
+      //Fireworks!!
+      if(random(100) < 5){
+        //print("Executing fireworks!!\n");
+        float size = random(10, 20);
+        WMAs.add(new Firework(new PVector(random(width), height), new PVector(size, size), random(2)));
+      }
+
+      for(Firework wma : WMAs){
+        wma.update();
+        wma.draw();
+      }
+      for(int i = 0; i < WMAs.size(); i++){
+        if(!WMAs.get(i)._enabled){
+          WMAs.remove(i);
+        }
+      }
+    }
+    else{
+      nrOfGenerations++;
+      stable = "Status: Unstable after " + nrOfGenerations + " generations Speed: " + (int)speed/5 + "x";
     }
   }
 
-  if(isStable){
-    stable = "Stable";
+  //input
+  if(moveUpP2){
+    print("Increase speed\n");
+    if(speed < 100)
+      speed+=speedIncreaseIncrement;
   }
+  else if(moveDownP2){
+    print("Decrease speed\n");
+    if(speed > speedIncreaseIncrement)
+      speed-=speedIncreaseIncrement;
+  }
+  frameRate(speed);
+
+  moveUpP2 = false;
+  moveDownP2 = false;
 
   // Update cell staus, die() or resurrect()
   for(int x = 0; x < nrOfColumns; x++){

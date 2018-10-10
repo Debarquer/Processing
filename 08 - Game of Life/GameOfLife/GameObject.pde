@@ -1,5 +1,4 @@
 class GameObject{
-
   float _x, _y, _size;
   boolean _isAlive = false;
   boolean _dying = false;
@@ -25,10 +24,8 @@ class GameObject{
   }
 
   public void draw(){
-    if(true){
       fill(_age, 0, _age, _dyingAnimation);
       rect(_x, _y, _size, _size);
-    }
   }
 
   public boolean update(){
@@ -44,7 +41,6 @@ class GameObject{
       _dyingAnimation-=5*15;
     }
 
-    // Check if we should die
     float nrOfAliveNeighbours = 0;
 
     for(int i = 0; i < _neighbours.length; i++){
@@ -64,32 +60,46 @@ class GameObject{
       }
     }
 
-    if(nrOfAliveNeighbours > 3){
-      //if(_isAlive)
-        //print("AliveNeighbours: " + nrOfAliveNeighbours + "\n");
-      _dying = true;
-      return false;
+    if(_isAlive){
+      // Check if we should die
+
+      if(nrOfAliveNeighbours > 3){
+        //if(_isAlive)
+          //print("AliveNeighbours: " + nrOfAliveNeighbours + "\n");
+        _dying = true;
+        return false;
+      }
+      // Remove this for mazes
+      else if(nrOfAliveNeighbours < 2){
+        _dying = true;
+        return false;
+      }
+      else{
+        return true;
+      }
     }
-    else if(nrOfAliveNeighbours == 3){
-      //if(!_isAlive)
-        //print("AliveNeighbours: " + nrOfAliveNeighbours + "\n");
-      _resurrecting = true;
-      return false;
-    }
-    // Rmeove this for mazes
-    else if(nrOfAliveNeighbours < 2){
-      _dying = true;
-      return false;
+    else if(!_isAlive){
+      // Check if we should be resurrected
+      if(nrOfAliveNeighbours == 3){
+        //if(!_isAlive)
+          //print("AliveNeighbours: " + nrOfAliveNeighbours + "\n");
+        _resurrecting = true;
+        return false;
+      }
+      else{
+        return true;
+      }
     }
     else{
-      return true;
+      // Neither alive nor dead -- zombie?
+      print("GameObject::update ERROR: cell is neither alive nor dead \n");
+      return false;
     }
   }
 
   public void die(){
     if(_isAlive){
       _age = 0;
-
     }
     _dying = false;
     _resurrecting = false;
@@ -102,10 +112,11 @@ class GameObject{
       _age = 0;
     }
 
+    _dyingAnimation = 255;
+
     _dying = false;
     _resurrecting = false;
 
     _isAlive = true;
-
   }
 }
