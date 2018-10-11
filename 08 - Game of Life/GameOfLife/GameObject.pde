@@ -47,6 +47,8 @@ class GameObject{
       GameObject nCell;
       int x = (int)_neighbours[i].x;
       int y = (int)_neighbours[i].y;
+      //if(_isAlive)
+        //print("My pos ["+_x+","+_y+"]neighbour at ["+x+","+y+"] -- total neighbours: "+_neighbours.length+"\n");
       try{
         nCell = cells[x][y];
       }
