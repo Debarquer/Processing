@@ -38,7 +38,8 @@ class GameObject{
       }
     }
     if(!_isAlive){
-      _dyingAnimation-=5*15;
+      //_dyingAnimation-=5*15;
+      _dyingAnimation=0;
     }
 
     float nrOfAliveNeighbours = 0;

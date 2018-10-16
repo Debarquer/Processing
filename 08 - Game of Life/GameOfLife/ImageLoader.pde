@@ -14,7 +14,6 @@ class RGBHolder{
 class ImageLoader{
 
   ImageLoader(){
-    //image = new BufferedImage();
   }
 
   BufferedImage image;
@@ -26,7 +25,6 @@ class ImageLoader{
 
     for (int row = 0; row < height; row++) {
        for (int col = 0; col < width; col++) {
-          //result[row][col] = ;
           int[] tmp = new int[4];
           image.getRaster().getPixel(row, col, tmp);
           result[col][row] = new RGBHolder(tmp[0], tmp[1], tmp[2]);
@@ -53,7 +51,5 @@ class ImageLoader{
     }catch(IOException e){
       System.out.println(e);
     }
-
   }
-
 }

@@ -32,9 +32,8 @@ class Firework{
   public void update(){
     _pos.y -= 5+(float)1/frameRate;
 
-    //print("before: " + _timerCurr);
     _timerCurr += (float)1/frameRate;
-    //print(" after: " + _timerCurr + "\n");
+
     if(_timerCurr >= _timerMax){
       explode();
     }
@@ -56,7 +55,6 @@ class Firework{
   public void draw(){
     if(_draw){
       fill(255, 255, 0);
-      //ellipse(_pos.x, _pos.y, _size.x, _size.y);
       image(img, _pos.x-img.width/2, _pos.y-img.height/2);
     }
   }

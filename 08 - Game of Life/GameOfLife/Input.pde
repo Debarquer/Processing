@@ -2,14 +2,12 @@
 boolean moveUpP2;
 boolean moveDownP2;
 
-void keyReleased()
-{
+void keyReleased(){
 
 	//keyCodes
 	boolean shift = false;
 
-	if(key == CODED)
-	{
+	if(key == CODED){
 		if(keyCode == UP)
 		{
 			moveUpP2 = true;
@@ -62,8 +60,6 @@ void keyReleased()
 	if(key == 32){
 		pauseSimulation = !pauseSimulation;
 	}
-
-	//print((int)key + "\n");
 }
 
 void mouseReleased(){
