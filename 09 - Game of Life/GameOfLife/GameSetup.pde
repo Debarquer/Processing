@@ -31,7 +31,7 @@ void GameSetup(){
       cells[x][y] = new GameObject(x, y);
 
       float rgbValue = cellData[x][y]._r + cellData[x][y]._g + cellData[x][y]._b;
-        if(/*rgbValue < 3*200*/random(100)<15){
+        if(rgbValue < 3*200){
           cells[x][y]._resurrecting = true; //<>//
       }
     }

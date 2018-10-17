@@ -44,7 +44,7 @@ Sound sound;
 boolean pauseSimulation = true;
 
 void setup(){
-  size(1400, 1000);
+  size(800, 640);
   frameRate(speed);
   GameSetup();
 }
