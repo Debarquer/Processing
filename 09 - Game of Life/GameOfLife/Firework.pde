@@ -65,7 +65,6 @@ class Firework{
 
   public void draw(){
     if(_draw){
-      fill(255, 255, 0);
       image(img, _pos.x-img.width/2, _pos.y-img.height/2);
     }
   }

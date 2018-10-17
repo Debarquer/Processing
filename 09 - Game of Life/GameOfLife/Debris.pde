@@ -18,8 +18,8 @@ class Debris{
   }
 
   public void update(){
-    _pos.x += _direction.x*5+(float)1/frameRate;;
-    _pos.y += _direction.y*5+(float)1/frameRate;;
+    _pos.x += _direction.x*5+(float)1/frameRate;
+    _pos.y += _direction.y*5+(float)1/frameRate;
 
     _timerCurr += (float)1/frameRate;
     if(_timerCurr >= _timerMax){

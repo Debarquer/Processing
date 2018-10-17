@@ -53,7 +53,7 @@ class ImageLoader{
 
     //read image
     try{
-      f = new File("D:\\Github\\Processing\\08 - Game of Life\\GameOfLife\\resources\\testimg.jpg");
+      f = new File("D:\\Github\\Processing\\09 - Game of Life\\GameOfLife\\resources\\testimg.jpg");
       image = ImageIO.read(f);
     }catch(IOException e){
       System.out.println(e);

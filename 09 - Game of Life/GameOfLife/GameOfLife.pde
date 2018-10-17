@@ -30,6 +30,7 @@ float drawOffsetY = 0;
 int nrOfColumns;
 int nrOfRows;
 int fillPercentage = 15;
+
 int speed = 5;
 int speedIncreaseIncrement = 5;
 
@@ -148,11 +149,14 @@ void processInput(){
   if(oldMousePos != null){
 		PVector newMousePos = new PVector(mouseX, mouseY);
     PVector direction = new PVector();
+
     direction.x = newMousePos.x;
     direction.y = newMousePos.y;
 		direction.sub(oldMousePos);
-		drawOffsetX += direction.x*1;
-		drawOffsetY += direction.y*1;
+
+		drawOffsetX += direction.x;
+		drawOffsetY += direction.y;
+
     oldMousePos = newMousePos;
 	}
 
@@ -167,9 +171,6 @@ void UpdateCellStatus(){
       }
       else if(cells[x][y]._resurrecting){
         cells[x][y].resurrect();
-      }
-      else{
-        // Do nothing
       }
     }
   }

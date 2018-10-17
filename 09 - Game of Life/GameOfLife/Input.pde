@@ -101,17 +101,21 @@ void mousePressed(){
 }
 
 void mouseReleased(){
-	print("Clicked " + mouseX + ":" + mouseY + " -- "+(mouseX/cellSize)+":"+mouseY/cellSize+"\n");
+	int x = mouseX - (int)drawOffsetX;
+	int y = mouseY - (int)drawOffsetY;
+	print("Clicked " + x + ":" + y + " -- "+(x/cellSize)+":"+y/cellSize+"\n");
 	try{
-		if(!cells[mouseX/cellSize][mouseY/cellSize]._isAlive){
-			cells[mouseX/cellSize][mouseY/cellSize].die();
+		if(cells[x/cellSize][y/cellSize]._isAlive){
+			print("Killing... \n");
+			cells[x/cellSize][y/cellSize].die();
 		}
 		else{
-			cells[mouseX/cellSize][mouseY/cellSize].resurrect();
+			print("Resurrecting... \n");
+			cells[x/cellSize][y/cellSize].resurrect();
 		}
 	}
 	catch(Exception e){
-		print(e + " at ["+mouseX/cellSize+","+mouseY/cellSize+"]\n");
+		print(e + " at ["+x/cellSize+","+y/cellSize+"]\n");
 	}
 
 	if(oldMousePos != null){
