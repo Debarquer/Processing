@@ -30,18 +30,29 @@ class Firework{
   }
 
   public void update(){
-    _pos.y -= 5+(float)1/frameRate;
-
     _timerCurr += (float)1/frameRate;
-
     if(_timerCurr >= _timerMax){
       explode();
     }
 
+    move();
+    updateDebris();
+  }
+
+  void move(){
+    _pos.y -= 5+(float)1/frameRate;
+  }
+
+  void updateDebris(){
     for(Debris debris : _debris){
       debris.update();
       debris.draw();
     }
+
+    cleanupDebrisList();
+  }
+
+  void cleanupDebrisList(){
     for(int i = 0; i < _debris.size(); i++){
       if(!_debris.get(i).enabled){
         _debris.remove(i);

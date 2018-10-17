@@ -1,122 +1,87 @@
+//TODO: Fix oscillators
+
 class GameObject{
-  float _x, _y, _size;
+  float _x, _y;
   boolean _isAlive = false;
   boolean _dying = false;
   boolean _resurrecting = false;
 
-  float _age = 0;
-  float _dyingAnimation = 0;
-
   int _nrOfNeighbours;
   PVector[] _neighbours;
 
-  public GameObject (float x, float y, float size){
+  public GameObject (float x, float y){
     _x = x;
     _y = y;
-    _size = size;
   }
 
   public void setNeighbours(ArrayList<PVector> neighbourNumbers){
+    if(_x == 30 && _y == 30)
+      print("Setting neighbours from position " + _x/10 + ", " + _y/10 + "\n");
     _neighbours = new PVector[neighbourNumbers.size()];
     for(int i = 0; i < _neighbours.length; i++){
-      _neighbours[i] = new PVector(neighbourNumbers.get(i).x, neighbourNumbers.get(i).y);
+      float xPos = neighbourNumbers.get(i).x;
+      float yPos = neighbourNumbers.get(i).y;
+
+      if(_x == 30 && _y == 30)
+        print("Neighbour " + i + " at " + xPos + ", " + yPos + "\n");
+
+      _neighbours[i] = new PVector(xPos, yPos);
     }
   }
 
   public void draw(){
-      fill(_age, 0, _age, _dyingAnimation);
-      rect(_x, _y, _size, _size);
+      rect(_x*cellSize + drawOffsetX, _y*cellSize+ drawOffsetY, cellSize, cellSize);
   }
 
   public boolean update(){
-    if(_isAlive){
-      _dyingAnimation = 255;
-
-      _age+=2*15;
-      if(_age > 255){
-        _age = 255;
-      }
-    }
-    if(!_isAlive){
-      //_dyingAnimation-=5*15;
-      _dyingAnimation=0;
-    }
+    boolean isStable = true;
 
     float nrOfAliveNeighbours = 0;
 
     for(int i = 0; i < _neighbours.length; i++){
-      GameObject nCell;
       int x = (int)_neighbours[i].x;
       int y = (int)_neighbours[i].y;
-      //if(_isAlive)
-        //print("My pos ["+_x+","+_y+"]neighbour at ["+x+","+y+"] -- total neighbours: "+_neighbours.length+"\n");
-      try{
-        nCell = cells[x][y];
-      }
-      catch(Exception e){
-        print(e + " at ["+x+","+y+"]\n");
-        return false;
-      }
 
-      if(nCell._isAlive){
+      if(cells[x][y]._isAlive){
         nrOfAliveNeighbours++;
       }
     }
 
     if(_isAlive){
-      // Check if we should die
-
       if(nrOfAliveNeighbours > 3){
-        //if(_isAlive)
-          //print("AliveNeighbours: " + nrOfAliveNeighbours + "\n");
         _dying = true;
-        return false;
+        isStable = false;
       }
       // Remove this for mazes
       else if(nrOfAliveNeighbours < 2){
         _dying = true;
-        return false;
+        isStable = false;
       }
       else{
-        return true;
-      }
-    }
-    else if(!_isAlive){
-      // Check if we should be resurrected
-      if(nrOfAliveNeighbours == 3){
-        //if(!_isAlive)
-          //print("AliveNeighbours: " + nrOfAliveNeighbours + "\n");
-        _resurrecting = true;
-        return false;
-      }
-      else{
-        return true;
+        isStable = true;
       }
     }
     else{
-      // Neither alive nor dead -- zombie?
-      print("GameObject::update ERROR: cell is neither alive nor dead \n");
-      return false;
+      if(nrOfAliveNeighbours == 3){
+        _resurrecting = true;
+        isStable = false;
+      }
+      else{
+        isStable = true;
+      }
     }
+
+    return isStable;
   }
 
   public void die(){
-    if(_isAlive){
-      _age = 0;
-    }
     _dying = false;
     _resurrecting = false;
-
+    
     _isAlive = false;
   }
 
   public void resurrect(){
-    if(!_isAlive){
-      _age = 0;
-    }
-
-    _dyingAnimation = 255;
-
     _dying = false;
     _resurrecting = false;
 

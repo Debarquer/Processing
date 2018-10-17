@@ -1,8 +1,13 @@
 
-boolean moveUpP2;
-boolean moveDownP2;
+boolean moveUp;
+boolean moveDown;
+boolean moveLeft;
+boolean moveRight;
+int scrollWheel = 0;
 
-void keyReleased(){
+PVector oldMousePos = null;
+
+void keyPressed(){
 
 	//keyCodes
 	boolean shift = false;
@@ -10,11 +15,19 @@ void keyReleased(){
 	if(key == CODED){
 		if(keyCode == UP)
 		{
-			moveUpP2 = true;
+			moveUp = true;
 		}
-		else if(keyCode == DOWN)
+		if(keyCode == DOWN)
 		{
-			moveDownP2 = true;
+			moveDown = true;
+		}
+		if(keyCode == LEFT)
+		{
+			moveLeft = true;
+		}
+		if(keyCode == RIGHT)
+		{
+			moveRight = true;
 		}
 		else if(keyCode == SHIFT){
 			shift = true;
@@ -56,22 +69,57 @@ void keyReleased(){
 		speed = (shift ? 20 : 20) * speedIncreaseIncrement;
 	}
 
-
+	// Space bar
 	if(key == 32){
 		pauseSimulation = !pauseSimulation;
 	}
 }
 
+void keyReleased(){
+	if(key == CODED){
+		if(keyCode == UP)
+		{
+			moveUp = false;
+		}
+		if(keyCode == DOWN)
+		{
+			moveDown = false;
+		}
+		if(keyCode == LEFT)
+		{
+			moveLeft = false;
+		}
+		if(keyCode == RIGHT)
+		{
+			moveRight = false;
+		}
+	}
+}
+
+void mousePressed(){
+	oldMousePos = new PVector(mouseX, mouseY);
+}
+
 void mouseReleased(){
+	print("Clicked " + mouseX + ":" + mouseY + " -- "+(mouseX/cellSize)+":"+mouseY/cellSize+"\n");
 	try{
 		if(!cells[mouseX/cellSize][mouseY/cellSize]._isAlive){
-			cells[mouseX/cellSize][mouseY/cellSize]._resurrecting = true;
+			cells[mouseX/cellSize][mouseY/cellSize].die();
 		}
 		else{
-			cells[mouseX/cellSize][mouseY/cellSize]._dying = true;
+			cells[mouseX/cellSize][mouseY/cellSize].resurrect();
 		}
 	}
 	catch(Exception e){
 		print(e + " at ["+mouseX/cellSize+","+mouseY/cellSize+"]\n");
 	}
+
+	if(oldMousePos != null){
+		oldMousePos = null;
+	}
+}
+
+void mouseWheel(MouseEvent event) {
+  scrollWheel = event.getCount();
+  //println(e + "\n");
 }

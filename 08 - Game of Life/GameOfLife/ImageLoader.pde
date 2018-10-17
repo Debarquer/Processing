@@ -19,14 +19,21 @@ class ImageLoader{
   BufferedImage image;
 
   public RGBHolder[][] getImagePixelData(){
-    int width = image.getWidth();
-    int height = image.getHeight();
-    RGBHolder[][] result = new RGBHolder[width][height];
+    int _width = image.getWidth(); //<>//
+    int _height = image.getHeight();
+    RGBHolder[][] result = new RGBHolder[_width][_height];
 
-    for (int row = 0; row < height; row++) {
-       for (int col = 0; col < width; col++) {
+    for (int row = 0; row < _height; row++) {
+       for (int col = 0; col < _width; col++) {
           int[] tmp = new int[4];
-          image.getRaster().getPixel(row, col, tmp);
+          try{
+            image.getRaster().getPixel(col, row, tmp);
+
+          }
+          catch(ArrayIndexOutOfBoundsException e){
+            print(e);
+            java.lang.System.exit(-1);
+          }
           result[col][row] = new RGBHolder(tmp[0], tmp[1], tmp[2]);
        }
     }

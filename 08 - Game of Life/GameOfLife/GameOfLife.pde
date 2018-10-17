@@ -24,6 +24,9 @@ GameObject cells[][];
 */
 
 int cellSize;
+float drawOffsetX = 0;
+float drawOffsetY = 0;
+
 int nrOfColumns;
 int nrOfRows;
 int fillPercentage = 15;
@@ -32,7 +35,7 @@ int speedIncreaseIncrement = 5;
 
 int nrOfGenerations = 0;
 
-String stable = "Unstable";
+String stable = "Status: Unstable after " + nrOfGenerations + " generations Speed: " + (int)speed/5 + "x";
 
 ArrayList<Firework> WMAs;
 
@@ -41,50 +44,25 @@ Sound sound;
 boolean pauseSimulation = true;
 
 void setup(){
-  size(800, 800);
+  size(1400, 1000);
   frameRate(speed);
   GameSetup();
 }
 
 void draw(){
-  Input();
-
+  processInput();
   background(0, 255, 0);
-  float a = 0.0;
-  float b = 0.15;
-  float c = 0.001f;
-  sound.volume(a+b+c);
-
   //drawGrid();
-  stable = "Status: Unstable after " + nrOfGenerations + " generations Speed: " + (int)speed/5 + "x";
 
   if(!pauseSimulation){
     if(CalculateCellStatus()){
-      // TODO: Implement fireworks
       stable = "Status: Stable after " + nrOfGenerations + " generations Speed: " + (int)speed/5 + "x";
-
-      //Fireworks!!
-      if(random(100) < 5){
-        float size = random(10, 20);
-        WMAs.add(new Firework(new PVector(random(width), height), new PVector(size, size), random(2)));
-      }
-
-      for(Firework wma : WMAs){
-        wma.update();
-        wma.draw();
-      }
-      for(int i = 0; i < WMAs.size(); i++){
-        if(!WMAs.get(i)._enabled){
-          WMAs.remove(i);
-        }
-      }
+      updateFireworks();
     }
     else{
       nrOfGenerations++;
       stable = "Status: Unstable after " + nrOfGenerations + " generations Speed: " + (int)speed/5 + "x";
     }
-  }
-  else{
   }
 
   UpdateCellStatus();
@@ -93,10 +71,10 @@ void draw(){
 }
 
 void drawGrid(){
-  for(int x = 0; x < height; x+=cellSize){
+  for(int x = 0; x < width; x+=cellSize){
     line(x, 0, x, height);
   }
-  for(int y = 0; y < width; y+=cellSize){
+  for(int y = 0; y < height; y+=cellSize){
     line(0, y, width, y);
   }
 }
@@ -128,21 +106,57 @@ boolean CalculateCellStatus(){
   return isStable;
 }
 
-void Input(){
-  if(moveUpP2){
-    print("Increase speed\n");
-    if(speed < 100)
-      speed+=speedIncreaseIncrement;
+void updateFireworks(){
+  if(random(100) < 5){
+    float size = random(10, 20);
+    WMAs.add(new Firework(new PVector(random(width), height), new PVector(size, size), random(1, height/250)));
   }
-  else if(moveDownP2){
-    print("Decrease speed\n");
-    if(speed > speedIncreaseIncrement)
-      speed-=speedIncreaseIncrement;
-  }
-  frameRate(speed);
 
-  moveUpP2 = false;
-  moveDownP2 = false;
+  for(Firework wma : WMAs){
+    wma.update();
+    wma.draw();
+  }
+  for(int i = 0; i < WMAs.size(); i++){
+    if(!WMAs.get(i)._enabled){
+      WMAs.remove(i);
+    }
+  }
+}
+
+void processInput(){
+  float moveSpeed = 10*cellSize;
+  if(moveUp){
+    drawOffsetY += moveSpeed;
+  }
+  if(moveDown){
+    drawOffsetY -= moveSpeed;
+  }
+  if(moveLeft){
+    drawOffsetX += moveSpeed;
+  }
+  if(moveRight){
+    drawOffsetX -= moveSpeed;
+  }
+
+  // Values from scrollWheel() func are reversed from expected
+  cellSize += -scrollWheel;
+  if(cellSize < 1){
+    cellSize = 1;
+  }
+  scrollWheel = 0;
+
+  if(oldMousePos != null){
+		PVector newMousePos = new PVector(mouseX, mouseY);
+    PVector direction = new PVector();
+    direction.x = newMousePos.x;
+    direction.y = newMousePos.y;
+		direction.sub(oldMousePos);
+		drawOffsetX += direction.x*1;
+		drawOffsetY += direction.y*1;
+    oldMousePos = newMousePos;
+	}
+
+  frameRate(speed);
 }
 
 void UpdateCellStatus(){
@@ -162,9 +176,14 @@ void UpdateCellStatus(){
 }
 
 void DrawCells(){
+  fill(0, 0, 0, 255);
   for(int x = 0; x < nrOfColumns; x++){
     for(int y = 0; y < nrOfRows; y++){
-      cells[x][y].draw();
+      if(cells[x][y]._isAlive){
+        // Check if the cell is within the screen view
+        if(cells[x][y]._x > 0 && cells[x][y]._y > 0 && cells[x][y]._x < width && cells[x][y]._y < height)
+          cells[x][y].draw();
+      }
     }
   }
 }

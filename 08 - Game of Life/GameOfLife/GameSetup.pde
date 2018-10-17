@@ -1,30 +1,38 @@
 void GameSetup(){
   sound = new Sound(this);
 
+  float a = 0.0;
+  float b = 0.15;
+  float c = 0.001f;
+  sound.volume(a+b+c);
+
   WMAs = new ArrayList<Firework>();
 
-  cellSize = 10;
+  cellSize = 5;
   nrOfColumns = (int)Math.floor(width/cellSize);
   nrOfRows = (int)Math.floor(height/cellSize);
 
   print(nrOfColumns+":"+nrOfRows+"\n");
 
-  cells = new GameObject[nrOfColumns][nrOfRows];
-
   ImageLoader imgLoader = new ImageLoader();
   imgLoader.loadImage("testimg.png");
   RGBHolder[][] cellData = imgLoader.getImagePixelData();
 
-  print(nrOfColumns+":"+cells.length+" -- " + nrOfRows + ":" + cells[0].length + "\n");
+  print(nrOfColumns+":"+cellData.length+" -- " + nrOfRows + ":" + cellData[0].length + "\n");
+
+  nrOfColumns = cellData.length;
+  nrOfRows = cellData[0].length;
+
+  cells = new GameObject[nrOfColumns][nrOfRows];
 
   // Create cells
   for(int x = 0; x < nrOfColumns; x++){
     for(int y = 0; y < nrOfRows; y++){
-      cells[x][y] = new GameObject(x*cellSize, y*cellSize, cellSize);
+      cells[x][y] = new GameObject(x, y);
 
-      float rgbValue = cellData[y][x]._r + cellData[y][x]._g + cellData[y][x]._b;
-      if(/*rgbValue < 3*200*/random(100) < 15){
-        cells[x][y]._resurrecting = true;
+      float rgbValue = cellData[x][y]._r + cellData[x][y]._g + cellData[x][y]._b;
+        if(/*rgbValue < 3*200*/random(100)<15){
+          cells[x][y]._resurrecting = true; //<>//
       }
     }
   }
@@ -39,57 +47,24 @@ void calculateNeighbours(){
 
       ArrayList<PVector> neighbourNumbers = new ArrayList<PVector>();
 
-      boolean leftMost = false;
-      boolean rightMost = false;
-      boolean topMost = false;
-      boolean bottomMost = false;
+      for(int dx = -1; dx <= 1; dx++){
+        for(int dy = -1; dy <= 1; dy++){
 
-      if(x - 1 < 0){
-        // We are the leftmost cell
-        leftMost = true;
-      }
-      if(x + 1 >= nrOfColumns){
-        // We are the rightmost cell
-        rightMost = true;
-      }
+          if(dx == 0 && dy == 0){
+            continue;
+          }
 
-      if(y - 1 < 0){
-        // We are the topmost cell
-        topMost = true;
-      }
-      if(y + 1 >= nrOfRows){
-        // We are the bottommost cell
-        bottomMost = true;
-      }
+          try{
+            GameObject cell = cells[x+dx][y+dy];
+          }
+          catch(Exception e){
+            //print("Invalid neighbour from ["+x+","+y+"] to ["+(x+dx)+","+(y+dy)+"] \n");
+            continue;
+          }
 
-      if(!leftMost){
-        neighbourNumbers.add(new PVector(x - 1, y));
-
-        if(!topMost){
-          neighbourNumbers.add(new PVector(x - 1, y - 1));
+          //print("Adding neighbour from ["+x+","+y+"] to ["+(x+dx)+","+(y+dy)+"] \n");
+          neighbourNumbers.add(new PVector(x+dx, y+dy));
         }
-        if(!bottomMost){
-          neighbourNumbers.add(new PVector(x - 1, y + 1));
-        }
-      }
-
-      if(!rightMost){
-        neighbourNumbers.add(new PVector(x + 1, y));
-
-        if(!topMost){
-          neighbourNumbers.add(new PVector(x + 1, y - 1));
-        }
-        if(!bottomMost){
-          neighbourNumbers.add(new PVector(x + 1, y + 1));
-        }
-      }
-
-      if(!topMost){
-        neighbourNumbers.add(new PVector(x, y - 1));
-      }
-
-      if(!bottomMost){
-        neighbourNumbers.add(new PVector(x, y + 1));
       }
 
       cells[x][y].setNeighbours(neighbourNumbers);
